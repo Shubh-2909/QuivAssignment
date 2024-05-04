@@ -28,7 +28,7 @@ const Image= () => {
     <div className="h-screen flex justify-center items-center">
       <div
         id="imageContainer"
-        className="relative w-96 h-72 overflow-hidden border border-gray-400"
+        className="relative w-80 h-80 overflow-hidden border border-gray-400"
       >
         <img
           src="./assets/authlayoutimg.jpg"
