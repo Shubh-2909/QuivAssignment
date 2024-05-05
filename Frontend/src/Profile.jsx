@@ -92,7 +92,7 @@ function ProfileCard() {
               <div className="text-center mt-12">
                 <div className="flex justify-center gap-3">
                   <h3 className="text-xl font-semibold leading-normal mb-2 text-white">
-                    Jenna Stones
+                    {profile.name}
                   </h3>
 
                   <CiEdit

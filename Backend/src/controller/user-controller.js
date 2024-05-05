@@ -46,7 +46,7 @@ const registerUser = async (req, res) => {
     console.log("response", response);
 
     return res.status(200).json({
-      message: `Welcome back!`,
+      message: `Welcome!`,
       success: true,
       data: response,
     });
