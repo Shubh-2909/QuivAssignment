@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useLoginMutation } from "../../redux/api/userAPI";
 import store from "../../redux/store";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const SigninForm = () => {
@@ -14,37 +14,15 @@ const SigninForm = () => {
   const [password, setPassword] = useState("");
   const [signin] = useLoginMutation();
   const [loading, setLoading] = useState(false);
-  const [profileID , setProfileID] = useState("");
+  const [profileID, setProfileID] = useState(false);
 
   const handleEmail = (event) => {
     setEmail(event.target.value);
   };
+
   const handlePassword = (event) => {
     setPassword(event.target.value);
   };
-
-
-
-const getProfileData = async (email) => {
-  try {
-    setLoading(true);
-    const url = `${import.meta.env.VITE_APP_SERVER_BASEURL}/user/userDetails/userbyEmail`;
-    const response = await axios.get(url, { params: { email } });
-    if (response.data.success) {
-      toast.success("User found successfully");
-      setProfileID(response.data.response._id);
-    } else {
-      toast.error("No user found");
-      navigate("/");
-    }
-  } catch (error) {
-    toast.error("Internal error occurred");
-    navigate("/");
-  } finally {
-    setLoading(false);
-  }
-};
-
 
   const handleSubmit = async () => {
     const data = {
@@ -53,12 +31,9 @@ const getProfileData = async (email) => {
     };
     console.log(data);
     
-    
     await loginHandler({ data, type: "form" });
-    await getProfileData(data.email);
     setEmail("");
     setPassword("");
-
   };
 
   const accessUser = (tokenResponse) => {
@@ -96,10 +71,12 @@ const getProfileData = async (email) => {
       });
 
       if (res.data.success) {
+        const url = `${import.meta.env.VITE_APP_SERVER_BASEURL}/user/userDetails/userbyEmail`;
+        const response = await axios.get(url, { params: { email } });
         toast.success("Login successful!");
         localStorage.setItem("authToken", JSON.stringify(res.data.token));
-        navigate(`/profile/${profileID}`);
-        setProfileID("");
+        navigate(`/profile/${response.data.response._id}`);
+        
       }
     } catch (error) {
       toast.error("Sign In Failed");
@@ -110,6 +87,12 @@ const getProfileData = async (email) => {
     onSuccess: (tokenResponse) => accessUser(tokenResponse),
   });
 
+
+  if(loading){
+    return(
+      <h1>Loading....</h1>
+    )
+  }
   return (
     <div>
       <div className="sm:w-420 flex justify-center items-center flex-col">

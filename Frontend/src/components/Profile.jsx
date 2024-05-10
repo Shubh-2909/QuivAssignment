@@ -98,7 +98,7 @@ function ProfileCard() {
                 </div>
                 <div className="text-sm leading-normal mt-0 mb-2 text-white font-bold uppercase">
                   <i className="fas fa-map-marker-alt mr-2 text-lg text-white"></i>
-                  Los Angeles, California
+                  {profile && profile.email}
                 </div>
                 <div className="mb-2 text-white mt-10">
                   <i className="fas fa-briefcase mr-2 text-lg text-white"></i>
