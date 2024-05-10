@@ -5,8 +5,10 @@ import toast from "react-hot-toast";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useRegisterMutation } from "../../redux/api/userAPI";
 import store from "../../redux/store";
+import { useNavigate} from "react-router-dom";
 
 const SignupForm = () => {
+  const navigate=useNavigate();
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -25,6 +27,7 @@ const SignupForm = () => {
   const handlePassword = (event) => {
     setPassword(event.target.value);
   };
+  
 
   const handleSubmit = async () => {
     const data = {
@@ -65,12 +68,12 @@ const SignupForm = () => {
     if (type === "googlePopup") {
       name = data?.name;
       email = data.email;
-      password = data.password;
+      password = data.email;
       username = data.username;
     } else {
       name = data.name;
       email = data.email;
-      password = data.email;
+      password = data.password;
       username = data.username;
       console.log(data);
     }
@@ -84,6 +87,7 @@ const SignupForm = () => {
       });
       if ("data" in res) {
         toast.success("Successful");
+        navigate("/");
       } else {
         const error = res.error;
         const message = error.data;
@@ -124,6 +128,7 @@ const SignupForm = () => {
               id="name"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Shubh"
+              value={name}
               required
               onChange={handleName}
             />
@@ -140,6 +145,7 @@ const SignupForm = () => {
               id="text"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Shubh@123"
+              value={username}
               required
               onChange={handleUsername}
             />
@@ -157,6 +163,7 @@ const SignupForm = () => {
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="name@flowbite.com"
               required
+              value={email}
               onChange={handleEmail}
             />
           </div>
@@ -172,6 +179,7 @@ const SignupForm = () => {
               id="password"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               required
+              value={password}
               onChange={handlePassword}
             />
           </div>
@@ -180,13 +188,6 @@ const SignupForm = () => {
             class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-5"
             onClick={handleSubmit}
           >
-            {/* {isLoading ? (
-              <div className="flex-center gap-2">
-                <Loader /> Loading..
-              </div>
-            ) : (
-              "Sign up"
-            )} */}
             Sign up
           </button>
 
@@ -201,6 +202,10 @@ const SignupForm = () => {
               <FcGoogle className="mr-2" />
               <span>Sign in with Google</span>
             </button>
+            <div>
+          <h3 className="text-white mt-4">*Please Login after registration for dual verification</h3>
+          <h3 className="text-white">*If Registration using GoggleAuth , password will be your email only. You can change it later.</h3>
+          </div>
           </div>
         </div>
       </div>

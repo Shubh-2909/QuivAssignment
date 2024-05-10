@@ -6,10 +6,10 @@ import Signupform from "./_auth/forms/SignUp";
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-import Home from "./Home";
+import Home from "./components/Home";
 import Firebase from "./_auth/forms/Firebase";
-import ProfileCard from "./Profile";
-import UpdateProfilee from "./UpdateProfile";
+import ProfileCard from "./components/Profile";
+import UpdateProfilee from "./components/UpdateProfile";
 
 const clientId =
   "1059746987667-qotnoa5namol8i1ba4641rdrd9ge6qgl.apps.googleusercontent.com";
@@ -22,7 +22,10 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/profile/:profileId" element={<ProfileCard />}></Route>
-            <Route path="/profile/update/:profileId" element={<UpdateProfilee />}></Route>
+            <Route
+              path="/profile/update/:profileId"
+              element={<UpdateProfilee />}
+            ></Route>
 
             <Route element={<AuthLayout />}>
               <Route path="/sign-in" element={<Signinform />} />

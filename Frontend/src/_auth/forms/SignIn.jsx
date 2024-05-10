@@ -5,11 +5,16 @@ import toast from "react-hot-toast";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useLoginMutation } from "../../redux/api/userAPI";
 import store from "../../redux/store";
+import { useNavigate} from "react-router-dom";
+import axios from 'axios';
 
 const SigninForm = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signin] = useLoginMutation();
+  const [loading, setLoading] = useState(false);
+  const [profileID , setProfileID] = useState("");
 
   const handleEmail = (event) => {
     setEmail(event.target.value);
@@ -18,15 +23,42 @@ const SigninForm = () => {
     setPassword(event.target.value);
   };
 
+
+
+const getProfileData = async (email) => {
+  try {
+    setLoading(true);
+    const url = `${import.meta.env.VITE_APP_SERVER_BASEURL}/user/userDetails/userbyEmail`;
+    const response = await axios.get(url, { params: { email } });
+    if (response.data.success) {
+      toast.success("User found successfully");
+      setProfileID(response.data.response._id);
+    } else {
+      toast.error("No user found");
+      navigate("/");
+    }
+  } catch (error) {
+    toast.error("Internal error occurred");
+    navigate("/");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
   const handleSubmit = async () => {
     const data = {
       email,
       password,
     };
     console.log(data);
+    
+    
+    await loginHandler({ data, type: "form" });
+    await getProfileData(data.email);
     setEmail("");
     setPassword("");
-    await loginHandler({ data, type: "form" });
+
   };
 
   const accessUser = (tokenResponse) => {
@@ -66,6 +98,8 @@ const SigninForm = () => {
       if (res.data.success) {
         toast.success("Login successful!");
         localStorage.setItem("authToken", JSON.stringify(res.data.token));
+        navigate(`/profile/${profileID}`);
+        setProfileID("");
       }
     } catch (error) {
       toast.error("Sign In Failed");
@@ -99,6 +133,7 @@ const SigninForm = () => {
               id="email"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="name@flowbite.com"
+              value={email}
               required
               onChange={handleEmail}
             />
@@ -115,6 +150,7 @@ const SigninForm = () => {
               id="password"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               required
+              value={password}
               onChange={handlePassword}
             />
           </div>
@@ -123,13 +159,6 @@ const SigninForm = () => {
             class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-5"
             onClick={handleSubmit}
           >
-            {/* {isLoading ? (
-              <div className="flex-center gap-2">
-                <Loader /> Loading..
-              </div>
-            ) : (
-              "Sign up"
-            )} */}
             Sign in
           </button>
 

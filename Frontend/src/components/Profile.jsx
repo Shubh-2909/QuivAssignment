@@ -5,32 +5,26 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-// console.log(import.meta.env.VITE_APP_BASEURL);
-// const profileId = "6634d4f75534ca360eeae8a3";
-
 function ProfileCard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState(null);
   const { profileId } = useParams();
 
-  const getProfieData = async () => {
+  const getProfileData = async () => {
     try {
       setLoading(true);
-      const url = `${
-        import.meta.env.VITE_APP_SERVER_BASEURL
-      }/user/${profileId}`;
+      const url = `${import.meta.env.VITE_APP_SERVER_BASEURL}/user/${profileId}`;
       const response = await axios.get(url);
-      console.log(response.data);
       if (response.data.success) {
         toast.success("User found successfully");
-        setProfile(response.data.user);
+        setProfile(response.data.user[0]);
       } else {
         toast.error("No user found");
         navigate("/");
       }
     } catch (error) {
-      toast.error("Internal error occured");
+      toast.error("Internal error occurred");
       navigate("/");
     } finally {
       setLoading(false);
@@ -38,7 +32,7 @@ function ProfileCard() {
   };
 
   useEffect(() => {
-    getProfieData();
+    getProfileData();
   }, []);
 
   const handleSubmit = (param) => {
@@ -48,8 +42,9 @@ function ProfileCard() {
   };
 
   if (loading) {
-    <p>LOADING...</p>;
+    return <p>Loading...</p>;
   }
+
   return (
     <div className="h-full w-full bg-slate-900">
       <section className="pt-16 bg-gray-800 pb-16">
@@ -92,9 +87,8 @@ function ProfileCard() {
               <div className="text-center mt-12">
                 <div className="flex justify-center gap-3">
                   <h3 className="text-xl font-semibold leading-normal mb-2 text-white">
-                    {profile.name}
+                    {profile && profile.name}
                   </h3>
-
                   <CiEdit
                     className="text-white h-6 w-6 mt-1 cursor-pointer"
                     onClick={() => {

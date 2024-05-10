@@ -1,3 +1,4 @@
+const { response } = require("express");
 const User = require("../models/user");
 
 const {
@@ -82,6 +83,7 @@ const login = async (req, res) => {
     const response = await authenticateUser(data);
     return res.status(200).json({
       message: "User Login Successfully",
+      response : response,
       success: true,
       token: response,
     });
@@ -97,9 +99,12 @@ const login = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
+    console.log(req.params);
     const { id } = req.params;
 
-    const user = await User.findById(id);
+    const user = await User.find({
+      _id : id
+    });
 
     return res.status(200).json({
       message: "User found successfully",
@@ -160,10 +165,36 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+const getUserByEmail = async (req, res) => {
+  try {
+    const data = {
+      email: req.query.email,
+    };
+
+    const user = await User.findOne({ email: data.email });
+    console.log("get user by email");
+    console.log(user);
+
+    return res.status(200).json({
+      message: "User found successfully",
+      success: true,
+      response: user,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(501).json({
+      message: "User not found",
+      success: false,
+      error: error,
+    });
+  }
+};
+
 module.exports = {
   registerUser: registerUser,
   login: login,
   getUser: getUser,
   deleteUser: deleteUser,
   updateUser: updateUser,
+  getUserByEmail : getUserByEmail
 };

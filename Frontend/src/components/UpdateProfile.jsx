@@ -1,23 +1,20 @@
 import React, { useState } from "react";
 import { Provider } from "react-redux";
-import { useUpdateUserMutation } from "./redux/api/userAPI"; // Import the mutation hook
 import toast from "react-hot-toast";
-import store from "./redux/store";
-import { useParams } from "react-router-dom";
+import store from "../redux/store";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 console.log(import.meta.env.VITE_APP_SERVER_BASEURL);
 
 const UpdateProfile = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState("");
 
-  // const { profileId } = useParams();
-  const profileId = "6634d4f75534ca360eeae8a3";
-
-  const [updateUser, { isLoading }] = useUpdateUserMutation(); // Destructure the mutation hook
+  const { profileId } = useParams();
 
   const handleName = (event) => {
     setName(event.target.value);
@@ -28,9 +25,6 @@ const UpdateProfile = () => {
   const handleEmail = (event) => {
     setEmail(event.target.value);
   };
-  const handlePassword = (event) => {
-    setPassword(event.target.value);
-  };
 
   const handleSubmit = async () => {
     const formData = {
@@ -39,7 +33,7 @@ const UpdateProfile = () => {
       email,
     };
     try {
-      console.log(import.meta.env.VITE_APP_SERVER_BASEURL);
+      setIsLoading(true);
       const url = `${
         import.meta.env.VITE_APP_SERVER_BASEURL
       }/user/${profileId}`;
@@ -48,8 +42,10 @@ const UpdateProfile = () => {
       console.log(response.data);
 
       toast.success("Profile updated successfully.");
+      navigate(`/profile/${profileId}`);
+      setIsLoading(false);
     } catch (error) {
-      // handle error
+      setIsLoading(false);
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile.");
     }
@@ -123,7 +119,7 @@ const UpdateProfile = () => {
           >
             {isLoading ? (
               <div className="flex-center gap-2">
-                <Loader /> Loading..
+                Loading..
               </div>
             ) : (
               "Update"
