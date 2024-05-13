@@ -66,10 +66,10 @@ const SignupForm = () => {
     let password = "";
     let username = "";
     if (type === "googlePopup") {
-      name = data?.name;
+      name = data.name;
       email = data.email;
       password = data.email;
-      username = data.username;
+      username = data.name;
     } else {
       name = data.name;
       email = data.email;

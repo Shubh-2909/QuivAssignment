@@ -1,10 +1,25 @@
 import React from "react";
 import Image from "./RevolveImage";
 import { useNavigate } from "react-router-dom";
+import { CgProfile } from "react-icons/cg";
+import { IoIosLogOut } from "react-icons/io";
 
 const Home = () => {
   const navigate = useNavigate();
+  const goto = () => {
+    let profileId = localStorage.getItem("profileId");
+    profileId = profileId.substring(1, profileId.length - 1);
+    console.log(profileId);
+    navigate(`/profile/${profileId}`);
+};
 
+const logoutUser = () => {
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("profileId");
+  window.location.reload();
+}
+
+  
   const handleSubmit = (param) => {
     console.log(param);
 
@@ -37,6 +52,19 @@ const Home = () => {
           journey of discovery, expression, and camaraderie. Let's make every
           interaction count, together on Quiv.io!
         </p>
+        {
+          localStorage.getItem("authToken") && (
+            <div className="flex gap-10 mt-10">
+              <CgProfile  className="text-white mt-4 text-3xl cursor-pointer" onClick={() => {
+              goto();
+            }}/>
+            
+            <IoIosLogOut className="text-white mt-4 text-3xl cursor-pointer" onClick={() => {
+              logoutUser();
+            }}/>
+            </div>
+          )
+        }
         {!localStorage.getItem("authToken") && (
           <div className="flex gap-5">
             <button

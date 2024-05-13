@@ -1,43 +1,71 @@
 import React, { useEffect } from 'react';
 
-const Image= () => {
+const RevolveImage = () => {
+  const constrain = 100;
+
   useEffect(() => {
-    const container = document.getElementById('imageContainer');
+    const mouseOverContainer = document.getElementById("ex1");
+    const ex1Layer = document.getElementById("ex1-layer");
+
+    const transforms = (x, y, el) => {
+      const box = el.getBoundingClientRect();
+      const calcX = -(y - box.y - (box.height / 2)) / constrain;
+      const calcY = (x - box.x - (box.width / 2)) / constrain;
+      
+      return "perspective(100px) "
+        + "   rotateX("+ calcX +"deg) "
+        + "   rotateY("+ calcY +"deg) "
+        + "   translateZ(0)"; 
+    };
+
+    const transformElement = (el, xyEl) => {
+      el.style.transform = transforms(...xyEl);
+    };
 
     const handleMouseMove = (e) => {
-      const xAxis = (window.innerWidth / 2 - e.pageX) / 10;
-      const yAxis = (window.innerHeight / 2 - e.pageY) / 10;
+      const xy = [e.clientX, e.clientY];
+      const position = xy.concat([ex1Layer]);
 
-      container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+      window.requestAnimationFrame(() => {
+        transformElement(ex1Layer, position);
+      });
     };
 
-    const handleMouseLeave = () => {
-      container.style.transform = 'rotateY(0deg) rotateX(0deg)';
-    };
-
-    container.addEventListener('mousemove', handleMouseMove);
-    container.addEventListener('mouseleave', handleMouseLeave);
+    mouseOverContainer.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-      container.removeEventListener('mousemove', handleMouseMove);
-      container.removeEventListener('mouseleave', handleMouseLeave);
+      mouseOverContainer.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, []); 
 
   return (
-    <div className="h-screen flex justify-center items-center">
-      <div
-        id="imageContainer"
-        className="relative w-80 h-80 overflow-hidden border border-gray-400"
-      >
-        <img
-          src="./assets/authlayoutimg.jpg"
-          alt="Interactive Image"
-          className="w-full h-full object-cover transition-transform duration-200 ease-out"
-        />
-      </div>
+    <div 
+      id="ex1" 
+      style={{
+        width: '50vw',
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgb(0,0,0)',
+        margin: 0,
+        padding: 0,
+        boxSizing: 'border-box'
+      }}
+    >
+      <img 
+        src="./assets/authlayoutimg.jpg" 
+        id="ex1-layer" 
+        style={{
+          width: '300px',
+          height: '500px',
+          borderRadius: '30px',
+          position: 'absolute',
+        }} 
+        alt="" 
+      />
     </div>
   );
 };
 
-export default Image;
+export default RevolveImage;

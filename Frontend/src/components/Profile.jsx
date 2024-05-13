@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import QRCode from "qrcode.react";
+import QRCode from "react-qr-code";
 import { CiEdit } from "react-icons/ci";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -14,11 +14,17 @@ function ProfileCard() {
   const getProfileData = async () => {
     try {
       setLoading(true);
-      const url = `${import.meta.env.VITE_APP_SERVER_BASEURL}/user/${profileId}`;
+      const url = `${
+        import.meta.env.VITE_APP_SERVER_BASEURL
+      }/user/${profileId}`;
       const response = await axios.get(url);
       if (response.data.success) {
         toast.success("User found successfully");
         setProfile(response.data.user[0]);
+        if(!localStorage.getItem("profileId")){
+          localStorage.setItem("profileId", JSON.stringify(profileId));
+        }
+        console.log(`${import.meta.env.VITE_APP_BASEURL}/profile/${profileId}`);
       } else {
         toast.error("No user found");
         navigate("/");
@@ -111,7 +117,7 @@ function ProfileCard() {
               </div>
               <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
                 <div className="flex flex-wrap justify-center">
-                  <div className="w-full lg:w-9/12 px-4">
+                  <div style={{ background: "white", padding: "16px" }}>
                     <QRCode
                       value={`${
                         import.meta.env.VITE_APP_BASEURL

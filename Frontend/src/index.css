@@ -1,29 +1,27 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 @import url('https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css');
 @import url('https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .h2-bold {
     @apply text-[30px] font-bold leading-[140%] tracking-tighter;
-  }
+}
 
-  .h3-bold {
+.h3-bold {
     @apply text-[24px] font-bold leading-[140%] tracking-tighter;
-  }
+}
 
-  .base-regular {
+.base-regular {
     @apply text-[16px] font-normal leading-[140%];
-  }
+}
 
-  @keyframes glow {
+@keyframes glow {
     0% {
-      text-shadow: 0 0 5px #2196F3;
+        text-shadow: 0 0 5px #2196F3;
     }
     100% {
-      text-shadow: 0 0 20px #2196F3;
+        text-shadow: 0 0 20px #2196F3;
     }
-  }
-  
- 
+}
